@@ -15,40 +15,40 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
-    Button sendButton;
-    private static final int PERMISSION_SEND_SMS = 123;
+public class MainActivity extends AppCompatActivity
+{
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         PermissionRequest permissionRequest = new PermissionRequest(this);
         permissionRequest.startRequestingPermissions();
+
         if (permissionRequest.getPermissionStatus())
         {
-            Toast.makeText(this,"All permissions granted",Toast.LENGTH_LONG);
+            Toast.makeText(this, "All permissions granted", Toast.LENGTH_LONG);
+            Intent intent = new Intent(this,StartPageActivity.class);
+            startActivity(intent);
         }
         else
         {
-            Toast.makeText(this,"Permissions Denied",Toast.LENGTH_LONG);
+            Toast.makeText(this, "Permissions Denied", Toast.LENGTH_LONG);
         }
-        sendButton = (Button)findViewById(R.id.Send_Button);
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendSMS("9873162039","Hello");
-            }
-        });
-
     }
-    public void sendSMS(String phoneNo, String msg) {
-        try {
+
+    public void sendSMS(String phoneNo, String msg)
+    {
+        try
+        {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNo, null, msg, null, null);
             Toast.makeText(getApplicationContext(), "Message Sent",
                     Toast.LENGTH_LONG).show();
-        } catch (Exception ex) {
-            Toast.makeText(getApplicationContext(),ex.getMessage().toString(),
+        }
+        catch (Exception ex)
+        {
+            Toast.makeText(getApplicationContext(), ex.getMessage().toString(),
                     Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }

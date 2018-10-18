@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class startpage extends AppCompatActivity {
+public class StartPageActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +17,5 @@ public class startpage extends AppCompatActivity {
                 // Code here executes on main thread after user presses button
             }
         });
-
     }
 }
