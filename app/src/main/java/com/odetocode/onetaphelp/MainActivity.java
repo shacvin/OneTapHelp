@@ -17,23 +17,61 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
 {
+    public final int MY_PERMISSIONS_REQUEST_SEND_SMS = 123;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        PermissionRequest permissionRequest = new PermissionRequest(this);
-        permissionRequest.startRequestingPermissions();
-
-        if (permissionRequest.getPermissionStatus())
+    }
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (!service.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
-            Toast.makeText(this, "All permissions granted", Toast.LENGTH_LONG);
-            Intent intent = new Intent(this,StartPageActivity.class);
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
+            return;
         }
-        else
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
-            Toast.makeText(this, "Permissions Denied", Toast.LENGTH_LONG);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_SEND_SMS);
+            return;
+        }
+        Console.print("permission granted");
+        Intent intent = new Intent(this, StartPageActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults)
+    {
+        Console.print(requestCode+"");
+        if (requestCode == MY_PERMISSIONS_REQUEST_SEND_SMS)
+        {
+            boolean results = true;
+            for (int i = 0;i < grantResults.length;i++)
+            {
+                if (grantResults[i]!=PackageManager.PERMISSION_GRANTED)
+                {
+                    results = false;
+                }
+            }
+            if (results && grantResults.length > 0)
+            {
+                Console.print("permission granted");
+                Intent intent = new Intent(this, StartPageActivity.class);
+                startActivity(intent);
+            }
+            else
+            {
+                Console.print("permission denied");
+                Intent intent = new Intent(this, DenyActivity.class);
+                startActivity(intent);
+            }
         }
     }
 
