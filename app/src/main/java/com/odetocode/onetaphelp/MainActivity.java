@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +58,19 @@ public class MainActivity extends AppCompatActivity {
             // request permission (see result in onRequestPermissionsResult() method)
             Toast.makeText(getApplicationContext(),"Permission to send SMS was denied",
                     Toast.LENGTH_LONG).show();
+        }
+    }
+    private void requestGpsPermission(){
+        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        boolean enabled = service
+                .isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+// check if enabled and if not send user to the GSP settings
+// Better solution would be to display a dialog and suggesting to
+// go to the settings
+        if (!enabled) {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
         }
     }
 }
