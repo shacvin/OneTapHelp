@@ -17,12 +17,20 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     Button sendButton;
-    private static final int PERMISSION_SEND_SMS = 123;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        requestSmsPermission();
+        PermissionRequest permissionRequest = new PermissionRequest(this);
+        permissionRequest.startRequestingPermissions();
+        if (permissionRequest.getPermissionStatus())
+        {
+            Toast.makeText(this,"All permissions granted",Toast.LENGTH_LONG);
+        }
+        else
+        {
+            Toast.makeText(this,"Permissions Denied",Toast.LENGTH_LONG);
+        }
         sendButton = (Button)findViewById(R.id.Send_Button);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -30,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 sendSMS("9873162039","Hello");
             }
         });
+
     }
     public void sendSMS(String phoneNo, String msg) {
         try {
@@ -41,36 +50,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),ex.getMessage().toString(),
                     Toast.LENGTH_LONG).show();
             ex.printStackTrace();
-        }
-    }
-
-
-    private void requestSmsPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)
-        {
-            // request permission (see result in onRequestPermissionsResult() method)
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.SEND_SMS},
-                    PERMISSION_SEND_SMS);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)
-        {
-            // request permission (see result in onRequestPermissionsResult() method)
-            Toast.makeText(getApplicationContext(),"Permission to send SMS was denied",
-                    Toast.LENGTH_LONG).show();
-        }
-    }
-    private void requestGpsPermission(){
-        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
-        boolean enabled = service
-                .isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-// check if enabled and if not send user to the GSP settings
-// Better solution would be to display a dialog and suggesting to
-// go to the settings
-        if (!enabled) {
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
         }
     }
 }
