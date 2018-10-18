@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Permission to send SMS was denied",
                     Toast.LENGTH_LONG).show();
         }
+        requestGpsPermission();
     }
     private void requestGpsPermission(){
         LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
