@@ -7,7 +7,7 @@
     tools:context=".startpage">
 
     <Button
-        android:id="@+id/Send_Button"
+        android:id="@+id/help_me_button"
         android:layout_width="171dp"
         android:layout_height="94dp"
         android:layout_marginStart="8dp"
@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/Send_Button"
+        android:id="@+id/help_others_button"
         android:layout_width="175dp"
         android:layout_height="102dp"
         android:layout_marginStart="8dp"
