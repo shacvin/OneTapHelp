@@ -18,12 +18,16 @@ import android.widget.Toast;
 
 import java.security.spec.ECField;
 
-public class LoadingActivity extends AppCompatActivity {
+public class LoadingActivity extends AppCompatActivity
+{
     Button cancelButton;
     LocationListener listener;
     TextView textView;
+    private boolean messageSent = false;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
         cancelButton = findViewById(R.id.cancel_button);
@@ -35,34 +39,45 @@ public class LoadingActivity extends AppCompatActivity {
                 onCancel();
             }
         });
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        final LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         textView = findViewById(R.id.textView3);
-        listener = new LocationListener() {
+        listener = new LocationListener()
+        {
             @Override
-            public void onLocationChanged(Location location) {
+            public void onLocationChanged(Location location)
+            {
                 textView.append("\n " + location.getLongitude() + " " + location.getLatitude());
                 String string = "";
                 string += location.getLongitude();
                 string += "_";
                 string += location.getLatitude();
                 Console.print("Send start");
-                sendSMS("9873162039",string);
+                if (!messageSent)
+                {
+                    sendSMS("9873162039", string);
+                    messageSent = true;
+                }
+
                 Console.print("Send end");
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
 
             }
 
             @Override
-            public void onProviderEnabled(String s) {
+            public void onStatusChanged(String s, int i, Bundle bundle)
+            {
 
             }
 
             @Override
-            public void onProviderDisabled(String s) {
+            public void onProviderEnabled(String s)
+            {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s)
+            {
 
                 Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(i);
@@ -70,25 +85,33 @@ public class LoadingActivity extends AppCompatActivity {
         };
 
     }
+
     @Override
     public void onStart()
     {
         super.onStart();
+        messageSent = false;
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-            if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                locationManager.requestLocationUpdates("gps", 5000, 0, listener);
-            else
-                Console.print("Permission for location");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            locationManager.requestLocationUpdates("gps", 5000, 0, listener);
+        }
+        else
+        {
+            Console.print("Permission for location");
+        }
 
-            Console.print("GPS started");
+        Console.print("GPS started");
 
     }
+
     public void onCancel()
     {
-        Intent intent = new Intent(this,StartPageActivity.class);
+        Intent intent = new Intent(this, StartPageActivity.class);
         startActivity(intent);
     }
+
     public void sendSMS(String phoneNo, String msg)
     {
         try
