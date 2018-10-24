@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
 {
+
     public final int MY_PERMISSIONS_REQUEST_SEND_SMS = 123;
     @Override
     protected void onCreate(Bundle savedInstanceState)

@@ -41,6 +41,7 @@ public class StartPageActivity extends AppCompatActivity {
     }
     public void onClickHelpOthers()
     {
-
+        Intent intent = new Intent(this,MapsActivity.class);
+        startActivity(intent);
     }
 }

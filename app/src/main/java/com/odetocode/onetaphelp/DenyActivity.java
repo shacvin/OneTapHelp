@@ -13,7 +13,7 @@ public class DenyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deny);
         givepermissions = findViewById(R.id.GIVEPERMISSIONS);
-        givepermissions.setOnClickListener((setGivepermissions());
+        //givepermissions.setOnClickListener((setGivepermissions());
     }
     public void setGivepermissions()
     {
