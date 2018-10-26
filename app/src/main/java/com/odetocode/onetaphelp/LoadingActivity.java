@@ -20,6 +20,7 @@ import java.security.spec.ECField;
 
 public class LoadingActivity extends AppCompatActivity
 {
+    static LoadingActivity activity;
     Button cancelButton;
     LocationListener listener;
     TextView textView;
@@ -42,6 +43,7 @@ public class LoadingActivity extends AppCompatActivity
         final LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         textView = findViewById(R.id.textView3);
+        activity = this;
         listener = new LocationListener()
         {
             @Override
@@ -58,9 +60,8 @@ public class LoadingActivity extends AppCompatActivity
                     sendSMS("9220592205", string);
                     messageSent = true;
                 }
-
+                Intent intent = new Intent(LoadingActivity.activity,OnSmsSendActivity.class);
                 Console.print("Send end");
-
             }
 
             @Override
