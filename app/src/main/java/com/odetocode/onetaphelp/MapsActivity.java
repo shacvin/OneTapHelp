@@ -37,6 +37,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static GoogleMap mMap;
     private ArrayList<Marker> list = new ArrayList<>();
     private LocationListener listener;
+    private static com.google.android.gms.maps.model.Marker marker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onLocationChanged(Location location)
             {
+                if (mMap != null)
+                {
+                    if (marker == null)
+                    {
+                        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                        marker = mMap.addMarker(new MarkerOptions()
+                                        .position(latLng)
+                                        .title("You are here")
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                    }
+                    else
+                    {
+                        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                        marker.setPosition(latLng);
+                    }
+                }
             }
 
             @Override
@@ -140,7 +157,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         double x = (list.get(j).longitude)/100000000.0;
                         LatLng sydne = new LatLng(x,y) ;
                         Log.i("App", " " + x+"$" + y );
-                        mMap.addMarker(new MarkerOptions().position(sydne).title(list.get(j).number + ""));
                         mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng( x,y))
                                 .title(list.get(j).number + " ")
