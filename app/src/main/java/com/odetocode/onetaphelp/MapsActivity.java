@@ -15,6 +15,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.android.volley.Request;
@@ -57,9 +58,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         String azure = "http://onetaphelpbackend.azurewebsites.net/api/values";
         String url = "https://onetaphelpbackend.azurewebsites.net/api/values";
 
@@ -77,7 +77,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Log.d("app","not null");
                     Log.d("app",getdata);
 
-                    String[] aa = getdata.split("_");
+                    String[] aa = getdata.split("@");
 
                     for (int i=0;i<aa.length;i++)
                     {
@@ -104,9 +104,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                     for(int j=0;j<list.size();j++)
                     {
-
-                        LatLng sydne = new LatLng((list.get(j).latitude)/100000000.0, (list.get(j).longitude)/100000000.0);
+                        double y = (list.get(j).latitude)/100000000.0;
+                        double x = (list.get(j).longitude)/100000000.0;
+                        LatLng sydne = new LatLng(x,y) ;
+                        Log.i("App", " " + x+"$" + y );
                         mMap.addMarker(new MarkerOptions().position(sydne).title(list.get(j).number + ""));
+                        mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng( x,y))
+                                .title(list.get(j).number + " ")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
                     }
                 }
             }
@@ -120,24 +126,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         ExampleRequestQueue.add(ExampleStringRequest);
 
-        String getdata = null;
-
-        if (getdata != null){
-            Log.d("app","not null");
-            Log.d("app",getdata);
-            String a[] = getdata.split("|");
-            for (int i=0;i<a.length;i++)
-            {
-                String b[] = a[i].split("_");
-                list.add(new Marker(Long.parseLong(b[0]),Long.parseLong(b[1]),Long.parseLong(b[2]),Long.parseLong(b[3])));
-            }
-            for(int j=0;j<list.size();j++)
-            {
-
-                LatLng sydne = new LatLng((list.get(j).latitude)/100000000.0, (list.get(j).longitude)/100000000.0);
-                mMap.addMarker(new MarkerOptions().position(sydne).title(list.get(j).number + ""));
-            }
-        }
 
     }
 }
