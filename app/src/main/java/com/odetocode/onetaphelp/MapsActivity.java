@@ -1,6 +1,11 @@
 package com.odetocode.onetaphelp;
 
 import android.app.DownloadManager;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +36,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static GoogleMap mMap;
     private ArrayList<Marker> list = new ArrayList<>();
+    private LocationListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +45,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        final LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         mapFragment.getMapAsync(this);
+        listener = new LocationListener()
+        {
+            @Override
+            public void onLocationChanged(Location location)
+            {
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle)
+            {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s)
+            {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s)
+            {
+
+                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(i);
+            }
+        };
 
     }
 
@@ -67,9 +101,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         StringRequest ExampleStringRequest = new StringRequest(Request.Method.GET, url, new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //This code is executed if the server responds, whether or not the response contains data.
-                //The String 'response' contains the server's response.
-                //You can test it by printing response.substring(0,500) to the screen.
+
                 Log.i("App","Got response "+response);
                 String getdata = response;
 
@@ -113,6 +145,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 .position(new LatLng( x,y))
                                 .title(list.get(j).number + " ")
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+
                     }
                 }
             }
