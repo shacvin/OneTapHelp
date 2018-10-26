@@ -40,6 +40,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static GoogleMap mMap;
     private ArrayList<Marker> list = new ArrayList<>();
     private LocationListener listener;
+    ArrayList<com.google.android.gms.maps.model.Marker> markerList = new ArrayList<>();
     private static com.google.android.gms.maps.model.Marker marker;
 
     @Override
@@ -61,17 +62,89 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 {
                     if (marker == null)
                     {
-                        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                         marker = mMap.addMarker(new MarkerOptions()
-                                        .position(latLng)
-                                        .title("You are here")
-                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                                .position(latLng)
+                                .title("You are here")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        markerList.add(marker);
                     }
                     else
                     {
-                        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                         marker.setPosition(latLng);
                     }
+                    for (int i = 0;i < markerList.size();i++)
+                    {
+                        markerList.get(markerList.size()-1).remove();
+                        markerList.remove(markerList.size()-1);
+                    }
+                    String url = "https://onetaphelpbackend.azurewebsites.net/api/values";
+                    RequestQueue ExampleRequestQueue = Volley.newRequestQueue(MapsActivity.this);
+                    StringRequest ExampleStringRequest = new StringRequest(Request.Method.GET, url, new com.android.volley.Response.Listener<String>()
+                    {
+                        @Override
+                        public void onResponse(String response)
+                        {
+
+                            Log.i("App", "Got response " + response);
+                            String getdata = response;
+
+                            if (getdata != null)
+                            {
+                                Log.d("app", "not null");
+                                Log.d("app", getdata);
+
+                                String[] aa = getdata.split("@");
+
+                                for (int i = 0; i < aa.length; i++)
+                                {
+                                    String bb[] = aa[i].split("_");
+                                    long a, b, c, d;
+                                    a = b = c = d = 0;
+                                    Log.i("App", aa[i]);/*
+                        for (int ii = 0;ii < bb.length;ii++)
+                        {
+                            Log.i("App",bb[ii]);
+                        }*/
+                                    try
+                                    {
+                                        a = Long.parseLong(bb[0]);
+                                        b = Long.parseLong(bb[1]);
+                                        c = Long.parseLong(bb[2]);
+                                        d = Long.parseLong(bb[3]);
+                                    }
+                                    catch (Exception e)
+                                    {
+
+                                    }
+                                    list.add(new Marker(a, b, c, d));
+                                }
+                                for (int j = 0; j < list.size(); j++)
+                                {
+                                    double y = (list.get(j).latitude) / 100000000.0;
+                                    double x = (list.get(j).longitude) / 100000000.0;
+                                    LatLng sydne = new LatLng(x, y);
+                                    Log.i("App", " " + x + "$" + y);
+                                    mMap.addMarker(new MarkerOptions()
+                                            .position(new LatLng(x, y))
+                                            .title(list.get(j).number + " ")
+                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+
+                                }
+                            }
+                        }
+                    }, new com.android.volley.Response.ErrorListener()
+                    { //Create an error listener to handle errors appropriately.
+                        @Override
+                        public void onErrorResponse(VolleyError error)
+                        {
+                            //This code is executed if there is an error.
+                            Log.i("App", "ERROR VOLLEY");
+                        }
+                    });
+
+                    ExampleRequestQueue.add(ExampleStringRequest);
                 }
             }
 
@@ -124,9 +197,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         String azure = "http://onetaphelpbackend.azurewebsites.net/api/values";
-        String url = "https://onetaphelpbackend.azurewebsites.net/api/values";
+
+
+RequestLocation();
+
+    }
+    void RequestLocation()
+    {
 
         RequestQueue ExampleRequestQueue = Volley.newRequestQueue(this);
+        String url = "https://onetaphelpbackend.azurewebsites.net/api/values";
         StringRequest ExampleStringRequest = new StringRequest(Request.Method.GET, url, new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -186,7 +266,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         ExampleRequestQueue.add(ExampleStringRequest);
-
-
     }
 }
