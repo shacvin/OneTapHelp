@@ -53,6 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onLocationChanged(Location location)
             {
+                Log.i("App", "abcdf");
                 if (mMap != null)
                 {
                     if (marker == null)
