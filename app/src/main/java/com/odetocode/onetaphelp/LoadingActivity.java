@@ -55,7 +55,7 @@ public class LoadingActivity extends AppCompatActivity
                 Console.print("Send start");
                 if (!messageSent)
                 {
-                    sendSMS("9873162039", string);
+                    sendSMS("9220592205", string);
                     messageSent = true;
                 }
 
