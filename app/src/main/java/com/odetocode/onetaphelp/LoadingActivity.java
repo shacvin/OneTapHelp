@@ -23,7 +23,6 @@ public class LoadingActivity extends AppCompatActivity
     static LoadingActivity activity;
     Button cancelButton;
     LocationListener listener;
-    TextView textView;
     private boolean messageSent = false;
 
     @Override
@@ -31,29 +30,18 @@ public class LoadingActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
-        cancelButton = findViewById(R.id.cancel_button);
-        cancelButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                onCancel();
-            }
-        });
         final LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        textView = findViewById(R.id.textView3);
         activity = this;
         listener = new LocationListener()
         {
             @Override
             public void onLocationChanged(Location location)
             {
-                textView.append("\n " + location.getLongitude() + " " + location.getLatitude());
-                String string = "";
-                string += location.getLongitude();
+                String string = "MCCWW ";
+                string += (long)(location.getLongitude()*100000000);
                 string += "_";
-                string += location.getLatitude();
+                string += (long)(location.getLatitude()*100000000);
                 Console.print("Send start");
                 if (!messageSent)
                 {
@@ -121,6 +109,8 @@ public class LoadingActivity extends AppCompatActivity
             smsManager.sendTextMessage(phoneNo, null, msg, null, null);
             Toast.makeText(getApplicationContext(), "Message Sent",
                     Toast.LENGTH_LONG).show();
+            Intent i = new Intent(this,OnSmsSendActivity.class);
+            startActivity(i);
         }
         catch (Exception ex)
         {

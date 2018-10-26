@@ -66,19 +66,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         marker = mMap.addMarker(new MarkerOptions()
                                 .position(latLng)
                                 .title("You are here")
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                        markerList.add(marker);
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+
                     }
                     else
                     {
                         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                         marker.setPosition(latLng);
                     }
-                    for (int i = 0;i < markerList.size();i++)
-                    {
-                        markerList.get(markerList.size()-1).remove();
-                        markerList.remove(markerList.size()-1);
-                    }
+
                     String url = "https://onetaphelpbackend.azurewebsites.net/api/values";
                     RequestQueue ExampleRequestQueue = Volley.newRequestQueue(MapsActivity.this);
                     StringRequest ExampleStringRequest = new StringRequest(Request.Method.GET, url, new com.android.volley.Response.Listener<String>()
@@ -120,16 +116,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     }
                                     list.add(new Marker(a, b, c, d));
                                 }
+                                for (int i = 0;i < markerList.size();i++)
+                                {
+                                    markerList.get(markerList.size()-1).remove();
+                                    markerList.remove(markerList.size()-1);
+                                }
                                 for (int j = 0; j < list.size(); j++)
                                 {
                                     double y = (list.get(j).latitude) / 100000000.0;
                                     double x = (list.get(j).longitude) / 100000000.0;
                                     LatLng sydne = new LatLng(x, y);
                                     Log.i("App", " " + x + "$" + y);
-                                    mMap.addMarker(new MarkerOptions()
+                                    com.google.android.gms.maps.model.Marker mm =  mMap.addMarker(new MarkerOptions()
                                             .position(new LatLng(x, y))
                                             .title(list.get(j).number + " ")
                                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                                    markerList.add(mm);
 
                                 }
                             }
